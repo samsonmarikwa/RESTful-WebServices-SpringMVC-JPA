@@ -1,6 +1,6 @@
 package com.samsonmarikwa.appws.service.impl;
 
-import javax.persistence.Column;
+import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.samsonmarikwa.appws.io.entity.UserEntity;
 import com.samsonmarikwa.appws.repository.UserRepository;
 import com.samsonmarikwa.appws.service.UserService;
+import com.samsonmarikwa.appws.shared.Utils;
 import com.samsonmarikwa.appws.shared.dto.UserDto;
 
 @Service
@@ -16,6 +17,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	Utils utils;
 
 	@Override
 	public UserDto createUser(UserDto user) {
@@ -28,9 +32,14 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = new UserEntity();
 		BeanUtils.copyProperties(user, userEntity);
 		
+		String generatedUserId = utils.generateUserId(30);
+		userEntity.setUserId(generatedUserId);
+		// The above may not be necessary as the UUID.randomUUID().toString() generates a random string.
+		// Universally unique identifier (UUID) is a 128-bit label used for information in computer systems.
+		// The term globally unique identifier (GUID) is also used. Databases can also generate a GUID.
+		userEntity.setUserId(UUID.randomUUID().toString()); 
 		userEntity.setEncryptedPassword("test");
-		userEntity.setUserId("testUserId");
-		
+
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
 		UserDto returnValue = new UserDto();
