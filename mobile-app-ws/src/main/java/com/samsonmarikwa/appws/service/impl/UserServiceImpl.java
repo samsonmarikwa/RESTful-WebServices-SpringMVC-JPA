@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.samsonmarikwa.appws.io.entity.UserEntity;
@@ -20,6 +23,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	Utils utils;
+	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
 	public UserDto createUser(UserDto user) {
@@ -37,8 +43,8 @@ public class UserServiceImpl implements UserService {
 		// The above may not be necessary as the UUID.randomUUID().toString() generates a random string.
 		// Universally unique identifier (UUID) is a 128-bit label used for information in computer systems.
 		// The term globally unique identifier (GUID) is also used. Databases can also generate a GUID.
-		userEntity.setUserId(UUID.randomUUID().toString()); 
-		userEntity.setEncryptedPassword("test");
+		// userEntity.setUserId(UUID.randomUUID().toString()); 
+		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
@@ -46,6 +52,11 @@ public class UserServiceImpl implements UserService {
 		BeanUtils.copyProperties(storedUserDetails, returnValue);
 		
 		return returnValue;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return null;
 	}
 
 }
