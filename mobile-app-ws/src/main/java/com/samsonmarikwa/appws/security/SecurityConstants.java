@@ -7,5 +7,6 @@ public class SecurityConstants {
 	public static final long EXPIRATION_TIME = 864000000; // 10 days
 	public static final String HEADER_STRING = "Authorization";
 	public static final String TOKEN_SECRET = "jf9i4igu83nfl0";
+//	public static final SecretKey TOKEN_SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	
 }
