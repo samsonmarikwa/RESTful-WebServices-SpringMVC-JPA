@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.samsonmarikwa.appws.service.UserService;
 import com.samsonmarikwa.appws.shared.dto.UserDto;
 import com.samsonmarikwa.appws.ui.model.request.UserDetailsRequestModel;
+import com.samsonmarikwa.appws.ui.model.response.ErrorMessages;
 import com.samsonmarikwa.appws.ui.model.response.UserRest;
 
 @RestController
@@ -39,9 +40,11 @@ public class UserController {
 	@PostMapping(
 			consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
+	public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
 		
 		UserRest returnValue = new UserRest();
+		
+		if (userDetails.getFirstName().isEmpty()) throw new Exception(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 		
 		UserDto userDto = new UserDto();
 		BeanUtils.copyProperties(userDetails, userDto);
