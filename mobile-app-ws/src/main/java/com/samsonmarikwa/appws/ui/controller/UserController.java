@@ -2,6 +2,7 @@ package com.samsonmarikwa.appws.ui.controller;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,9 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-	@GetMapping(path="/{id}")
+	// If client does not send Accept header value, then the first definition in the produces is taken as the return type.
+	// In this case, XML will be the default response type. To get JSON, the Accept header value should be application/json
+	@GetMapping(path="/{id}", produces= {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public UserRest getUser(@PathVariable String id) {
 		UserRest returnValue = new UserRest();
 		
@@ -33,7 +36,7 @@ public class UserController {
 		return returnValue;
 	}
 	
-	@PostMapping
+	@PostMapping(produces= {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
 		
 		UserRest returnValue = new UserRest();
