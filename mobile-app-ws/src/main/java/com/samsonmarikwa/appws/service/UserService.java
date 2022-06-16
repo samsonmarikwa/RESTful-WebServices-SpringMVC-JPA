@@ -1,5 +1,7 @@
 package com.samsonmarikwa.appws.service;
 
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.samsonmarikwa.appws.shared.dto.UserDto;
@@ -11,5 +13,6 @@ public interface UserService extends UserDetailsService {
 	UserDto getUserByUserId(String userId);
 	UserDto updateUser(String id, UserDto userDto);
 	void deleteUser(String id);
+	List<UserDto> getUsers(int page, int limit);
 
 }
