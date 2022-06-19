@@ -3,6 +3,7 @@ package com.samsonmarikwa.appws.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import com.samsonmarikwa.appws.io.entity.UserEntity;
 import com.samsonmarikwa.appws.repository.UserRepository;
 import com.samsonmarikwa.appws.service.UserService;
 import com.samsonmarikwa.appws.shared.Utils;
+import com.samsonmarikwa.appws.shared.dto.AddressDTO;
 import com.samsonmarikwa.appws.shared.dto.UserDto;
 import com.samsonmarikwa.appws.ui.model.response.ErrorMessages;
 
@@ -42,10 +44,18 @@ public class UserServiceImpl implements UserService {
 		// to insert column data that is not unique
 		if(userRepository.findByEmail(user.getEmail()) != null) throw new RuntimeException("Record already exists");
 		
-		UserEntity userEntity = new UserEntity();
-		BeanUtils.copyProperties(user, userEntity);
+		for (int i = 0; i < user.getAddresses().size(); i++) {
+			AddressDTO address = user.getAddresses().get(i);
+			address.setUserDetails(user);
+			address.setAddressId(utils.generateId(30));
+			user.getAddresses().set(i, address);
+		}
 		
-		String generatedUserId = utils.generateUserId(30);
+		//BeanUtils.copyProperties(user, userEntity);
+		ModelMapper modelMapper = new ModelMapper();
+		UserEntity userEntity = modelMapper.map(user, UserEntity.class);
+		
+		String generatedUserId = utils.generateId(30);
 		userEntity.setUserId(generatedUserId);
 		// The above may not be necessary as the UUID.randomUUID().toString() generates a random string.
 		// Universally unique identifier (UUID) is a 128-bit label used for information in computer systems.
@@ -55,8 +65,9 @@ public class UserServiceImpl implements UserService {
 
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
-		UserDto returnValue = new UserDto();
-		BeanUtils.copyProperties(storedUserDetails, returnValue);
+//		UserDto returnValue = new UserDto();
+//		BeanUtils.copyProperties(storedUserDetails, returnValue);
+		UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 		
 		return returnValue;
 	}

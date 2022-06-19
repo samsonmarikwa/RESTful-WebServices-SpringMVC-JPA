@@ -8,12 +8,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
-public class MobileAppWsApplication extends SpringBootServletInitializer {
+//public class MobileAppWsApplication extends SpringBootServletInitializer { // for war file
+public class MobileAppWsApplication {
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(MobileAppWsApplication.class);
-	}
+	// for war file
+//	@Override
+//	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//		return application.sources(MobileAppWsApplication.class);
+//	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(MobileAppWsApplication.class, args);

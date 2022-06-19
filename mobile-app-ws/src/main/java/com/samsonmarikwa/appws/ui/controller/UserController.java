@@ -3,6 +3,7 @@ package com.samsonmarikwa.appws.ui.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -60,11 +61,16 @@ public class UserController {
 		if (userDetails.getLastName().isEmpty())
 			throw new NullPointerException("Lastname cannot be empty");
 
-		UserDto userDto = new UserDto();
-		BeanUtils.copyProperties(userDetails, userDto);
-
+//		UserDto userDto = new UserDto();
+//		BeanUtils.copyProperties(userDetails, userDto);
+		
+		// ModelMapper works similarly to BeanUtils. ModelMapper is able to handle nested objects.
+		ModelMapper modelMapper = new ModelMapper();
+		UserDto userDto = modelMapper.map(userDetails, UserDto.class);
+		
 		UserDto createdUser = userService.createUser(userDto);
-		BeanUtils.copyProperties(createdUser, returnValue);
+//		BeanUtils.copyProperties(createdUser, returnValue);
+		returnValue = modelMapper.map(createdUser, UserRest.class);
 
 		return returnValue;
 	}
