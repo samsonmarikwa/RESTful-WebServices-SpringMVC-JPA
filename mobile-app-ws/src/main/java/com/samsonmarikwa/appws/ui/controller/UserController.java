@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -131,7 +132,7 @@ public class UserController {
 	}
 	
 	@GetMapping(path="/{userId}/addresses", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public List<AddressRest> getUserAddresses(@PathVariable String userId) {
+	public CollectionModel<AddressRest> getUserAddresses(@PathVariable String userId) {
 		
 		List<AddressRest> returnValue = new ArrayList<>();
 		
@@ -142,7 +143,10 @@ public class UserController {
 			returnValue = new ModelMapper().map(addressDto, listType);
 		}
 		
-		return returnValue;
+		Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(userId).withRel("user");
+		Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserAddresses(userId)).withSelfRel();
+		
+		return CollectionModel.of(returnValue, userLink, selfLink);
 			
 	}
 	
