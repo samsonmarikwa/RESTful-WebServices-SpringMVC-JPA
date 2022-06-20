@@ -1,12 +1,14 @@
 package com.samsonmarikwa.appws.ui.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
@@ -145,11 +147,13 @@ public class UserController {
 	}
 	
 	@GetMapping(path="/{userId}/addresses/{addressId}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public AddressRest getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
+	public EntityModel<AddressRest> getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
+//		public AddressRest getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
 		
 		AddressDTO addressDto = addressService.getAddress(addressId);
 		AddressRest returnValue = new ModelMapper().map(addressDto, AddressRest.class);
 		
+		// Implement HATEOAS - Hypertext As The Engine Of Application State
 		// http://localhost:8080/users/<userId>
 		Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(userId).withRel("user");
 		// http://localhost:8080/users/<userId>/addresses
@@ -164,12 +168,14 @@ public class UserController {
 				.slash(addressId)
 				.withSelfRel();
 		
-		returnValue.add(userLink);
-		returnValue.add(userAddressesLink);
-		returnValue.add(selfLink);
+//		Not required, since we are now using EntityModel
+//		returnValue.add(userLink);
+//		returnValue.add(userAddressesLink);
+//		returnValue.add(selfLink);
 		
-		
-		return returnValue;
+		return EntityModel.of(returnValue, Arrays.asList(userLink, userAddressesLink, selfLink));
+				
+//		return returnValue;
 			
 	}
 
