@@ -130,12 +130,12 @@ public class UserController {
 		return returnValue;
 	}
 	
-	@GetMapping(path="/{id}/addresses", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public List<AddressRest> getUserAddresses(@PathVariable String id) {
+	@GetMapping(path="/{userId}/addresses", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public List<AddressRest> getUserAddresses(@PathVariable String userId) {
 		
 		List<AddressRest> returnValue = new ArrayList<>();
 		
-		List<AddressDTO> addressDto = addressService.getAddresses(id);
+		List<AddressDTO> addressDto = addressService.getAddresses(userId);
 		
 		if (addressDto != null && !addressDto.isEmpty()) {
 			java.lang.reflect.Type listType = new TypeToken<List<AddressRest>>() {}.getType();
@@ -156,17 +156,26 @@ public class UserController {
 		// Implement HATEOAS - Hypertext As The Engine Of Application State
 		// http://localhost:8080/users/<userId>
 		Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(userId).withRel("user");
+		
 		// http://localhost:8080/users/<userId>/addresses
-		Link userAddressesLink = WebMvcLinkBuilder.linkTo(UserController.class)
-				.slash(userId)
-				.slash("addresses")
-				.withRel("addresses");
+//		Link userAddressesLink = WebMvcLinkBuilder.linkTo(UserController.class)
+//				.slash(userId)
+//				.slash("addresses")
+//				.withRel("addresses");
+
+		// We can use methodOn() and this allows us to skip the hardcoding of the links, so commenting out the above
+		Link userAddressesLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserAddresses(userId)).withRel("addresses");
+		
 		// http://localhost:8080/users/<userId>/addresses/<addressId>
-		Link selfLink = WebMvcLinkBuilder.linkTo(UserController.class)
-				.slash(userId)
-				.slash("addresses")
-				.slash(addressId)
-				.withSelfRel();
+//		Link selfLink = WebMvcLinkBuilder.linkTo(UserController.class)
+//				.slash(userId)
+//				.slash("addresses")
+//				.slash(addressId)
+//				.withSelfRel();
+		
+		// We can use methodOn() and this allows us to skip the hardcoding of the links, so commenting out the above
+		Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserAddress(userId, addressId)).withSelfRel();
+		
 		
 //		Not required, since we are now using EntityModel
 //		returnValue.add(userLink);
