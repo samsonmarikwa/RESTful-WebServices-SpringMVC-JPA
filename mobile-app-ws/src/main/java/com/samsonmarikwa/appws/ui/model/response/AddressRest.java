@@ -2,8 +2,7 @@ package com.samsonmarikwa.appws.ui.model.response;
 
 import org.springframework.hateoas.RepresentationModel;
 
-public class AddressRest {
-//public class AddressRest extends RepresentationModel<AddressRest> { // since we are now using EntityModel for HATEOAS, this is not required
+public class AddressRest extends RepresentationModel<AddressRest> { // if using EntityModel for HATEOAS, RepresentationModel is not required
 	private String addressId;
     private String city;
     private String country;

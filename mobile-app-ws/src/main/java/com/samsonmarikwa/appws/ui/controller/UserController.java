@@ -37,7 +37,7 @@ import com.samsonmarikwa.appws.ui.model.response.RequestOperationStatus;
 import com.samsonmarikwa.appws.ui.model.response.UserRest;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
 
 	@Autowired
@@ -141,6 +141,15 @@ public class UserController {
 		if (addressDto != null && !addressDto.isEmpty()) {
 			java.lang.reflect.Type listType = new TypeToken<List<AddressRest>>() {}.getType();
 			returnValue = new ModelMapper().map(addressDto, listType);
+			
+			// Add links to individual addresses in the list of AddressRest
+			for (AddressRest addressRest : returnValue) {
+				Link selfLink = WebMvcLinkBuilder
+						.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserAddress(userId, addressRest.getAddressId()))
+						.withSelfRel();
+				addressRest.add(selfLink);
+			}
+			
 		}
 		
 		Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(userId).withRel("user");
