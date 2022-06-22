@@ -37,7 +37,7 @@ import com.samsonmarikwa.appws.ui.model.response.RequestOperationStatus;
 import com.samsonmarikwa.appws.ui.model.response.UserRest;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
 
 	@Autowired
@@ -141,6 +141,15 @@ public class UserController {
 		if (addressDto != null && !addressDto.isEmpty()) {
 			java.lang.reflect.Type listType = new TypeToken<List<AddressRest>>() {}.getType();
 			returnValue = new ModelMapper().map(addressDto, listType);
+			
+			// Add links to individual addresses in the list of AddressRest
+			for (AddressRest addressRest : returnValue) {
+				Link selfLink = WebMvcLinkBuilder
+						.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserAddress(userId, addressRest.getAddressId()))
+						.withSelfRel();
+				addressRest.add(selfLink);
+			}
+			
 		}
 		
 		Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(userId).withRel("user");
@@ -190,6 +199,22 @@ public class UserController {
 				
 //		return returnValue;
 			
+	}
+	
+	// http://localhost:8080/mobile-app-ws/users/email-verification?token=sdfdsf
+	@GetMapping(path="/email-verification", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+		
+		OperationStatusModel returnValue = new OperationStatusModel();
+		returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+		
+		boolean isVerified = userService.verifyEmailToken(token);
+		
+		returnValue.setOperationResult(isVerified ? RequestOperationStatus.SUCCESS.name() : RequestOperationStatus.ERROR.name());
+		
+		return returnValue;
+		
+		
 	}
 
 }
