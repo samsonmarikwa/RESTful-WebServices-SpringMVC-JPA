@@ -200,5 +200,21 @@ public class UserController {
 //		return returnValue;
 			
 	}
+	
+	// http://localhost:8080/mobile-app-ws/users/email-verification?token=sdfdsf
+	@GetMapping(path="/email-verification", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+		
+		OperationStatusModel returnValue = new OperationStatusModel();
+		returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+		
+		boolean isVerified = userService.verifyEmailToken(token);
+		
+		returnValue.setOperationResult(isVerified ? RequestOperationStatus.SUCCESS.name() : RequestOperationStatus.ERROR.name());
+		
+		return returnValue;
+		
+		
+	}
 
 }

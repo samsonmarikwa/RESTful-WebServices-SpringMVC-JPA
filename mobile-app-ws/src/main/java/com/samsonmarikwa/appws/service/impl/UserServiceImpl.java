@@ -62,6 +62,8 @@ public class UserServiceImpl implements UserService {
 		// The term globally unique identifier (GUID) is also used. Databases can also generate a GUID.
 		// userEntity.setUserId(UUID.randomUUID().toString()); 
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(generatedUserId));
+		userEntity.setEmailVerificationStatus(false);
 
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
@@ -78,7 +80,10 @@ public class UserServiceImpl implements UserService {
 		
 		if (userEntity == null) throw new UsernameNotFoundException(email);
 		
-		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+		return new User(
+				userEntity.getEmail(), userEntity.getEncryptedPassword(), userEntity.getEmailVerificationStatus(), true, true, true, new ArrayList<>());
+		
+//		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 	}
 
 	@Override
@@ -155,6 +160,28 @@ public class UserServiceImpl implements UserService {
 		
 		return returnValue;
 
+	}
+
+	@Override
+	public boolean verifyEmailToken(String token) {
+		boolean returnValue = false;
+		
+		// Find user by token
+		UserEntity userEntity = userRepository.findUserByEmailVerificationToken(token);
+		
+		if (userEntity != null) {
+			boolean hasTokenExpired = Utils.hasTokenExpired(token);
+			
+			if (!hasTokenExpired) {
+				userEntity.setEmailVerificationToken(null);
+				userEntity.setEmailVerificationStatus(Boolean.TRUE);
+				userRepository.save(userEntity);
+				returnValue = true;
+			}
+		}
+		
+		return returnValue;
+		
 	}
 
 }
