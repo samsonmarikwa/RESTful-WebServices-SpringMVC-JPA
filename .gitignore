@@ -23,4 +23,5 @@ buildNumber.properties
 *.zip
 *.tar.gz
 *.rar
+*.pem
 /.metadata/
