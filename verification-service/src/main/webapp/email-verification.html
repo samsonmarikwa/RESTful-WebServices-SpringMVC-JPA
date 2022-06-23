@@ -15,7 +15,7 @@
 			}
 
 			function verifyToken(tokenValue) {
-				$.get('http://localhost:8080/mobile-app-ws/users/email-verification', { token: tokenValue })
+				$.get('http://ec2-3-83-147-140.compute-1.amazonaws.com:8080/mobile-app-ws/users/email-verification', { token: tokenValue })
 					.done(function (response) {
 						console.log(response);
 						if (response["operationResult"] === "SUCCESS") {
@@ -34,10 +34,10 @@
 <body>
 	<h1>Email Verification Service</h1>
 	<div id="successful-result" style="display: none">
-		Successful verification
+		Successful verification!
 	</div>
 	<div id="not-successful-result" style="display: none">
-		Verification link has expired
+		Verification link has expired!
 	</div>
 </body>
 
