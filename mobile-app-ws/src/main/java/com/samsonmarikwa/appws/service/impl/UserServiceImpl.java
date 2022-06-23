@@ -19,6 +19,7 @@ import com.samsonmarikwa.appws.exceptions.UserServiceException;
 import com.samsonmarikwa.appws.io.entity.UserEntity;
 import com.samsonmarikwa.appws.repository.UserRepository;
 import com.samsonmarikwa.appws.service.UserService;
+import com.samsonmarikwa.appws.shared.AmazonSES;
 import com.samsonmarikwa.appws.shared.Utils;
 import com.samsonmarikwa.appws.shared.dto.AddressDTO;
 import com.samsonmarikwa.appws.shared.dto.UserDto;
@@ -70,6 +71,9 @@ public class UserServiceImpl implements UserService {
 //		UserDto returnValue = new UserDto();
 //		BeanUtils.copyProperties(storedUserDetails, returnValue);
 		UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
+		
+		// Send an email message to user to verify their email address
+		new AmazonSES().verifyEmail(returnValue);
 		
 		return returnValue;
 	}
