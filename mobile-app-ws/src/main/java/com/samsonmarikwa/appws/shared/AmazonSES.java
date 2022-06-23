@@ -13,6 +13,7 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.samsonmarikwa.appws.shared.dto.UserDto;
 
 public class AmazonSES {
+
 	
 	@Value("${aws.accessKeyId}")
 	private String accessKeyId;
