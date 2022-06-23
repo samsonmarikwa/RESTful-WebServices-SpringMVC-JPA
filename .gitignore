@@ -21,6 +21,7 @@ buildNumber.properties
 *.nar
 *.ear
 *.zip
+*.pem
 *.tar.gz
 *.rar
 *.pem
