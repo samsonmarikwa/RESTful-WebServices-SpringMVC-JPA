@@ -10,16 +10,11 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import com.samsonmarikwa.appws.SpringApplicationContext;
+import com.samsonmarikwa.appws.security.AppProperties;
 import com.samsonmarikwa.appws.shared.dto.UserDto;
 
 public class AmazonSES {
-
-	
-	@Value("${aws.accessKeyId}")
-	private String accessKeyId;
-	
-	@Value("${aws.secretKey}")
-	private String secretKey;
 	
 	// This address must be verified with Amazon SES
 	final String FROM = "sammari4249@gmail.com";
@@ -43,9 +38,11 @@ public class AmazonSES {
 			+ "Thank you! And we are waiting for you inside!";
 
 	public void verifyEmail(UserDto userDto) {
+		
+		AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("appProperties");
 
-		System.setProperty("aws.accessKeyId", accessKeyId); 	
-		System.setProperty("aws.secretKey", secretKey); 	
+		System.setProperty("aws.accessKeyId", appProperties.getAwsAccessKey()); 	
+		System.setProperty("aws.secretKey", appProperties.getAwsSecretKey()); 	
 
 		AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 

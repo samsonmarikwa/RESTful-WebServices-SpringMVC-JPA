@@ -13,4 +13,12 @@ public class AppProperties {
 	public String getTokenSecret() {
 		return env.getProperty("tokenSecret");
 	}
+	
+	public String getAwsAccessKey() {
+		return env.getProperty("aws.access.key");
+	}
+	
+	public String getAwsSecretKey() {
+		return env.getProperty("aws.secret.key");
+	}
 }
