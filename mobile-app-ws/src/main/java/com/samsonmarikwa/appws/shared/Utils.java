@@ -63,4 +63,17 @@ public class Utils {
 		return token;
 	}
 
+	public String generatePasswordResetToken(String userId) {
+		
+		AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("appProperties");
+		String tokenSecret = appProperties.getTokenSecret();
+		String token = Jwts.builder()
+				.setSubject(userId)
+				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+				.signWith(SignatureAlgorithm.HS512, tokenSecret)
+				.compact();
+		
+		return token;
+	}
+
 }
