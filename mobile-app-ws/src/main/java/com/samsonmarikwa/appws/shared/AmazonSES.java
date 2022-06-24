@@ -105,6 +105,6 @@ public class AmazonSES {
 			returnValue = true;
 		}
 		
-		return false;
+		return returnValue;
 	}
 }
