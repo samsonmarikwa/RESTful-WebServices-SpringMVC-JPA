@@ -1,7 +1,5 @@
 package com.samsonmarikwa.appws.shared;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
@@ -28,7 +26,8 @@ public class AmazonSES {
 	final String HTMLBODY = "<h1>Please verify your e-mail address</h1>"
 			+ "<p>Thank you for registering with our mobile app. To complete registration process and be able to log in"
 			+ " click on the following link: "
-			+ "<a href='http://ec2-3-83-147-140.compute-1.amazonaws.com:8080/verification-service/email-verification.html?token=$tokenValue'>"
+			+ "<a href='http://localhost:8080/verification-service/email-verification.html?token=$tokenValue'>"
+//			+ "<a href='http://ec2-3-83-147-140.compute-1.amazonaws.com:8080/verification-service/email-verification.html?token=$tokenValue'>"
 			+ "Final step to complete your registration" + "</a><br/><br/>"
 			+ "Thank you! And we are waiting for you inside!</p>";
 
@@ -61,7 +60,7 @@ public class AmazonSES {
 		AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("appProperties");
 
 		System.setProperty("aws.accessKeyId", appProperties.getAwsAccessKey()); 	
-		System.setProperty("aws.secretKey", appProperties.getAwsSecretKey()); 	
+		System.setProperty("aws.secretKey", appProperties.getAwsSecretKey());
 
 		AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 
@@ -82,6 +81,10 @@ public class AmazonSES {
 	public boolean sendPasswordResetRequest(String firstName, String email, String token) {
 		
 		boolean returnValue = false;
+		
+		AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("appProperties");
+		System.setProperty("aws.accessKeyId", appProperties.getAwsAccessKey()); 	
+		System.setProperty("aws.secretKey", appProperties.getAwsSecretKey());
 		
 		AmazonSimpleEmailService client = 
 				AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.US_EAST_1).build();

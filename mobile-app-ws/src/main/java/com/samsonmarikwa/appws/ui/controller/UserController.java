@@ -28,6 +28,7 @@ import com.samsonmarikwa.appws.service.AddressService;
 import com.samsonmarikwa.appws.service.UserService;
 import com.samsonmarikwa.appws.shared.dto.AddressDTO;
 import com.samsonmarikwa.appws.shared.dto.UserDto;
+import com.samsonmarikwa.appws.ui.model.request.PasswordResetModel;
 import com.samsonmarikwa.appws.ui.model.request.PasswordResetRequestModel;
 import com.samsonmarikwa.appws.ui.model.request.UserDetailsRequestModel;
 import com.samsonmarikwa.appws.ui.model.response.AddressRest;
@@ -233,5 +234,23 @@ public class UserController {
 		return returnValue;
 		
 	}
+	
+	// http://localhost:8080/mobile-app-ws/users/password-reset
+		@PostMapping(path="/password-reset",
+				produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+				consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+		public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
+			
+			OperationStatusModel returnValue = new OperationStatusModel();
+			
+			boolean operationResult = userService.resetPassword(
+					passwordResetModel.getToken(), passwordResetModel.getPassword());
+			returnValue.setOperationName(RequestOperationName.PASSWORD_RESET.name());
+			
+			returnValue.setOperationResult(operationResult ? RequestOperationStatus.SUCCESS.name() : RequestOperationStatus.ERROR.name());
+			
+			return returnValue;
+			
+		}
 
 }
