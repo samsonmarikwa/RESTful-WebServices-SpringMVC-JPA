@@ -76,6 +76,7 @@ public class AmazonSES {
 				.withSource(FROM);
 
 		client.sendEmail(request);
+
 	}
 
 	public boolean sendPasswordResetRequest(String firstName, String email, String token) {

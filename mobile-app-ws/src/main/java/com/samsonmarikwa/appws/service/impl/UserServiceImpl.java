@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 		for (int i = 0; i < user.getAddresses().size(); i++) {
 			AddressDTO address = user.getAddresses().get(i);
 			address.setUserDetails(user);
-			address.setAddressId(utils.generateId(30));
+			address.setAddressId(utils.generateAddressId(30));
 			user.getAddresses().set(i, address);
 		}
 		
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 		UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 		
 		// Send an email message to user to verify their email address
-		new AmazonSES().verifyEmail(returnValue);
+//		new AmazonSES().verifyEmail(returnValue);
 		
 		return returnValue;
 	}
@@ -143,8 +143,7 @@ public class UserServiceImpl implements UserService {
 		if (userEntity == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 		
 		userRepository.delete(userEntity);
-		
-		
+			
 	}
 
 	@Override
