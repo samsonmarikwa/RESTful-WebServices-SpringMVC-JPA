@@ -41,6 +41,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
+	AmazonSES amazonSES;
 
 	@Override
 	public UserDto createUser(UserDto user) {
@@ -48,12 +51,12 @@ public class UserServiceImpl implements UserService {
 		// One method to check for existing record to prevent duplication.
 		// Another method is to use @Column(nullable=false, unique=true) and let the database throw exception if an attempt is made
 		// to insert column data that is not unique
-		if(userRepository.findByEmail(user.getEmail()) != null) throw new RuntimeException("Record already exists");
+		if(userRepository.findByEmail(user.getEmail()) != null) throw new UserServiceException("Record already exists");
 		
 		for (int i = 0; i < user.getAddresses().size(); i++) {
 			AddressDTO address = user.getAddresses().get(i);
 			address.setUserDetails(user);
-			address.setAddressId(utils.generateId(30));
+			address.setAddressId(utils.generateAddressId(30));
 			user.getAddresses().set(i, address);
 		}
 		
@@ -78,7 +81,7 @@ public class UserServiceImpl implements UserService {
 		UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 		
 		// Send an email message to user to verify their email address
-		new AmazonSES().verifyEmail(returnValue);
+		amazonSES.verifyEmail(returnValue);
 		
 		return returnValue;
 	}
@@ -143,8 +146,7 @@ public class UserServiceImpl implements UserService {
 		if (userEntity == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 		
 		userRepository.delete(userEntity);
-		
-		
+			
 	}
 
 	@Override
@@ -211,7 +213,7 @@ public class UserServiceImpl implements UserService {
 		passwordResetTokenEntity.setUserDetails(userEntity);
 		passwordResetTokenRepository.save(passwordResetTokenEntity);
 		
-		returnValue = new AmazonSES().sendPasswordResetRequest(
+		returnValue = amazonSES.sendPasswordResetRequest(
 				userEntity.getFirstName(),
 				userEntity.getEmail(),
 				token);
