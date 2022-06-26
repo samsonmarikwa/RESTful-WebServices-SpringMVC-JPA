@@ -18,12 +18,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.samsonmarikwa.appws.exceptions.UserServiceException;
 import com.samsonmarikwa.appws.io.entity.AddressEntity;
 import com.samsonmarikwa.appws.io.entity.UserEntity;
 import com.samsonmarikwa.appws.repository.UserRepository;
@@ -96,6 +98,26 @@ class UserServiceImplTest {
 	}
 	
 	@Test
+	void testCreateUser_UserServiceException () {
+		
+		when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+		
+		UserDto userDto = new UserDto();
+		userDto.setId(1L);
+		userDto.setUserId(userId);
+		userDto.setFirstName("Don");
+		userDto.setLastName("Quixote");
+		userDto.setPassword("password");
+		userDto.setEmail("samsonmarikwa@outlook.com");
+		userDto.setAddresses(getAddressesDto());
+		
+		assertThrows(UserServiceException.class, () -> {
+			userService.createUser(userDto);
+		});
+		
+	}
+	
+	@Test
 	void testCreateUser() {
 		
 		// This class under test requires to be broken into chunks to make unit testing easier.
@@ -105,7 +127,9 @@ class UserServiceImplTest {
 		when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encryptedPassword);
 		when(utils.generateEmailVerificationToken(anyString())).thenReturn("verificationtoken");
 		when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
-		when(amazonSES.verifyEmail(any(UserDto.class))).thenReturn(true);
+		// The AmazonSES class is calling an Amazon service, so we should not test it within this class.
+		// as this becomes an integration test, so we are doing nothing in this test
+		Mockito.doNothing().when(amazonSES).verifyEmail(any(UserDto.class));
 		
 		UserDto userDto = new UserDto();
 		userDto.setId(1L);
