@@ -1,5 +1,7 @@
 package com.samsonmarikwa.appws.shared;
 
+import org.springframework.stereotype.Component;
+
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
@@ -13,6 +15,7 @@ import com.samsonmarikwa.appws.SpringApplicationContext;
 import com.samsonmarikwa.appws.security.AppProperties;
 import com.samsonmarikwa.appws.shared.dto.UserDto;
 
+@Component
 public class AmazonSES {
 	
 	// This address must be verified with Amazon SES
@@ -55,7 +58,9 @@ public class AmazonSES {
 			+ "http://localhost:8080/verification-service/password-reset.html?token=$tokenValue"
 			+ " Thank you!";
 
-	public void verifyEmail(UserDto userDto) {
+	public boolean verifyEmail(UserDto userDto) {
+		
+		boolean returnValue = false;
 		
 		AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("appProperties");
 
@@ -75,7 +80,12 @@ public class AmazonSES {
 						.withSubject(new Content().withCharset("UTF-8").withData(SUBJECT)))
 				.withSource(FROM);
 
-		client.sendEmail(request);
+		SendEmailResult result = client.sendEmail(request);
+		if (result != null && (result.getMessageId() != null && !result.getMessageId().isEmpty())) {
+			returnValue = true;
+		}
+		
+		return returnValue;
 
 	}
 

@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +27,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.samsonmarikwa.appws.io.entity.AddressEntity;
 import com.samsonmarikwa.appws.io.entity.UserEntity;
 import com.samsonmarikwa.appws.repository.UserRepository;
+import com.samsonmarikwa.appws.shared.AmazonSES;
 import com.samsonmarikwa.appws.shared.Utils;
 import com.samsonmarikwa.appws.shared.dto.AddressDTO;
 import com.samsonmarikwa.appws.shared.dto.UserDto;
@@ -45,6 +45,9 @@ class UserServiceImplTest {
 	
 	@Mock
 	BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Mock
+	AmazonSES amazonSES;
 		
 	UserEntity userEntity;
 	
@@ -102,6 +105,7 @@ class UserServiceImplTest {
 		when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encryptedPassword);
 		when(utils.generateEmailVerificationToken(anyString())).thenReturn("verificationtoken");
 		when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+		when(amazonSES.verifyEmail(any(UserDto.class))).thenReturn(true);
 		
 		UserDto userDto = new UserDto();
 		userDto.setId(1L);
