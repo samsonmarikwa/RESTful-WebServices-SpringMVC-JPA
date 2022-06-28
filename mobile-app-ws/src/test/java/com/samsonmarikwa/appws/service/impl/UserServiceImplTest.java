@@ -123,7 +123,7 @@ class UserServiceImplTest {
 		// This class under test requires to be broken into chunks to make unit testing easier.
 		
 		when(userRepository.findByEmail(anyString())).thenReturn(null);
-		when(utils.generateId(anyInt())).thenReturn(userId);
+		when(utils.generateUserId(anyInt())).thenReturn(userId);
 		when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encryptedPassword);
 		when(utils.generateEmailVerificationToken(anyString())).thenReturn("verificationtoken");
 		when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);

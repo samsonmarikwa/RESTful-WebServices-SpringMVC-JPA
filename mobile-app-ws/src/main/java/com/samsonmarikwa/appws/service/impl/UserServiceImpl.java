@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
 		ModelMapper modelMapper = new ModelMapper();
 		UserEntity userEntity = modelMapper.map(user, UserEntity.class);
 		
-		String generatedUserId = utils.generateId(30);
+		String generatedUserId = utils.generateUserId(30);
 		userEntity.setUserId(generatedUserId);
 		// The above may not be necessary as the UUID.randomUUID().toString() generates a random string.
 		// Universally unique identifier (UUID) is a 128-bit label used for information in computer systems.
