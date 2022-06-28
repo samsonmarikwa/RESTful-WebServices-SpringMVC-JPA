@@ -29,12 +29,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL).permitAll()
 			.antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL).permitAll()
 			.antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL).permitAll()
+			.antMatchers(SecurityConstants.H2_CONSOLE).permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.addFilter(getAuthenticationFilter())
 			.addFilter(new AuthorizationFilter(authenticationManager()))
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
+		//http.headers().frameOptions().disable(); // this should never be committed to production as it is a security risk. It is only there for h2-console
+		// this prevents the browser to load your page in iframe
 	}
 	
 	@Override
