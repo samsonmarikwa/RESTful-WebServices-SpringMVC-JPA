@@ -37,8 +37,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		
-		//http.headers().frameOptions().disable(); // this should never be committed to production as it is a security risk. It is only there for h2-console
-		// this prevents the browser to load your page in iframe
+		http.headers().frameOptions().disable(); // this should never be committed to production as it is a security risk. It is only there for h2-console
+		// this prevents the browser to load your page in iframe. To connect to h2-console, uncomment other you get "refused to connect" error
 	}
 	
 	@Override
