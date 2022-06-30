@@ -101,7 +101,9 @@ public class UserController {
 		BeanUtils.copyProperties(userDetails, userDto);
 
 		UserDto updatedUser = userService.updateUser(id, userDto);
-		BeanUtils.copyProperties(updatedUser, returnValue);
+//		BeanUtils.copyProperties(updatedUser, returnValue);
+		ModelMapper modelMapper = new ModelMapper();
+		returnValue = modelMapper.map(updatedUser, UserRest.class);
 		
 		return returnValue;
 	}
