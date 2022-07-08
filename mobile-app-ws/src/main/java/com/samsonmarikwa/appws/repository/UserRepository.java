@@ -33,8 +33,8 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
 	List<UserEntity> findUserByFirstNameAndLastName(String firstName, String lastName);
 	
 	// named parameters- should match @Param with the param in the query. The order matching is not required
-	@Query(value="select * from Users u where u.last_name = :lastname",
+	@Query(value="select * from Users u where u.last_name = :lastname and u.first_name = :firstname",
 			nativeQuery = true)
-	List<UserEntity> findUserByLastName(@Param("lastname") String lastName);
+	List<UserEntity> findUserByLastNameFirstName(@Param("firstname") String firstName, @Param("lastname") String lastName);
 
 }

@@ -57,8 +57,9 @@ class UserRepositoryTest {
 	
 	@Test
 	void testFindUserByLastName() {
+		String firstName = "John";
 		String lastName = "Doe";
-		List<UserEntity> users = userRepository.findUserByLastName(lastName);
+		List<UserEntity> users = userRepository.findUserByLastNameFirstName(firstName, lastName);
 		assertNotNull(users);
 		assertTrue(users.size() == 2);
 	}
