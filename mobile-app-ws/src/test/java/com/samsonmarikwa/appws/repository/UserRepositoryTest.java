@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.samsonmarikwa.appws.io.entity.AddressEntity;
@@ -54,6 +55,14 @@ class UserRepositoryTest {
 		assertTrue(users.size() == 2);
 	}
 	
+	@Test
+	void testFindUserByLastName() {
+		String lastName = "Doe";
+		List<UserEntity> users = userRepository.findUserByLastName(lastName);
+		assertNotNull(users);
+		assertTrue(users.size() == 2);
+	}
+
 	private void createRecords() {
 		// Prepare test data
 		UserEntity userEntity = new UserEntity();
