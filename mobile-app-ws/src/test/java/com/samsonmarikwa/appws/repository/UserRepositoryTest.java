@@ -24,16 +24,44 @@ class UserRepositoryTest {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	static boolean recordsCreated = false;
 
 	@BeforeEach
 	void setUp() throws Exception {
+		if (!recordsCreated) {
+			createRecords();
+		}
+	}
+
+	@Test
+	void testGetVerifiedUsers() {
+		Pageable pageableRequest = PageRequest.of(0, 1);	// retrieves one page - one record 
+		Page<UserEntity> page = userRepository.findAllUsersWithConfirmedEmailAddress(pageableRequest);
+		assertNotNull(page);
+		
+		List<UserEntity> userEntities = page.getContent();
+		assertNotNull(userEntities);
+		assertTrue(userEntities.size() == 1);	// should retrieve one record based on the PageRequest
+	}
+	
+	@Test
+	void testFindUserByFirstAndLastName() {
+		String firstName = "John";
+		String lastName = "Doe";
+		List<UserEntity> users = userRepository.findUserByFirstNameAndLastName(firstName, lastName);
+		assertNotNull(users);
+		assertTrue(users.size() == 2);
+	}
+	
+	private void createRecords() {
 		// Prepare test data
 		UserEntity userEntity = new UserEntity();
 		userEntity.setFirstName("John");
 		userEntity.setLastName("Doe");
 		userEntity.setUserId("abcd-efgh-ijkl");
 		userEntity.setEncryptedPassword("mcjd$5^&8,g");
-		userEntity.setEmail("test@test.com");
+		userEntity.setEmail("test0@test.com");
 		userEntity.setEmailVerificationStatus(true);
 		
 		AddressEntity addressEntity = new AddressEntity();
@@ -73,17 +101,8 @@ class UserRepositoryTest {
 		userEntity2.setAddresses(addresses2);
 		
 		userRepository.save(userEntity2);
-	}
-
-	@Test
-	void testGetVerifiedUsers() {
-		Pageable pageableRequest = PageRequest.of(0, 1);	// retrieves one page - one record 
-		Page<UserEntity> page = userRepository.findAllUsersWithConfirmedEmailAddress(pageableRequest);
-		assertNotNull(page);
 		
-		List<UserEntity> userEntities = page.getContent();
-		assertNotNull(userEntities);
-		assertTrue(userEntities.size() == 1);	// should retrieve one record
+		recordsCreated = true;
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.samsonmarikwa.appws.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -23,5 +25,10 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
 			countQuery="select count(*) from Users",
 			nativeQuery = true)
 	Page<UserEntity> findAllUsersWithConfirmedEmailAddress(Pageable pageableRequest);
+	
+	// positional or index parameters
+	@Query(value="select * from Users u where u.first_name = ?1 and u.last_name = ?2",
+			nativeQuery = true)
+	List<UserEntity> findUserByFirstNameAndLastName(String firstName, String lastName);
 
 }
