@@ -88,6 +88,19 @@ class UserRepositoryTest {
 		assertNotNull(firstname);
 		assertNotNull(lastname);
 	}
+	
+	@Test
+	final void testUpdateUserEmailVerificationStatus() {
+		boolean emailVerificationStatus = true;
+		String userId = "abcd-efgh-ijkl";
+		userRepository.updateUserEmailVerificationStatus(emailVerificationStatus, userId);
+		
+		UserEntity userEntity = userRepository.findByUserId(userId);
+		
+		boolean storedEmailVerificationStatus = userEntity.getEmailVerificationStatus();
+		
+		assertTrue(storedEmailVerificationStatus == emailVerificationStatus);
+	}
 
 	private void createRecords() {
 		// Prepare test data
