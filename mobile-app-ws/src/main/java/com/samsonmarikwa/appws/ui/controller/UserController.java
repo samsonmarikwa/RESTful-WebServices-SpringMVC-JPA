@@ -210,7 +210,7 @@ public class UserController {
 	// http://localhost:8080/mobile-app-ws/users/email-verification?token=sdfdsf
 //	@CrossOrigin(origins="*") // allows requests from all origins
 //	@CrossOrigin(origins={"http://localhost:8080", "http://localhost:8090"}) // allows requests from multiple specified origins
-	@CrossOrigin(origins="http://localhost:8080") // allows requests from http://localhost:8080
+//	@CrossOrigin(origins="http://localhost:8080") // allows requests from http://localhost:8080
 	@GetMapping(path="/email-verification", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
 		
