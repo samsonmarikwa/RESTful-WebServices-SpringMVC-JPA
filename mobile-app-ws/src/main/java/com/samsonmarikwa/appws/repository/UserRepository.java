@@ -52,6 +52,22 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
 	@Transactional	// if errors take place, then a rollback takes place and any partial updates will be removed. Usually, this annotation is put on a service method class that calls the repository method
 	@Modifying // This JPA annotation is used for mutation queries
 	@Query(value="update users u set u.EMAIL_VERIFICATION_STATUS=:emailVerificationStatus WHERE u.user_id = :userId", nativeQuery = true)
-	void updateUserEmailVerificationStatus(@Param("emailVerificationStatus") boolean emailVerificationStatus,
+	void updateUserEmailVerificationStatus(
+			@Param("emailVerificationStatus") boolean emailVerificationStatus,
 			@Param("userId") String userId);
+	
+	// JPQL - Java Persistence Query Language - no value and nativeQuery attributes
+	@Query("select usr from UserEntity usr where usr.userId = :userId")
+	UserEntity findUserEntityByUserId(@Param("userId") String userId);
+	
+	@Query("select user.firstName, user.lastName from UserEntity user where user.userId = :userId")
+	List<Object[]> getUserEntityFullNameById(@Param("userId") String userId);
+	
+	@Transactional
+	@Modifying
+	@Query("update UserEntity u set u.emailVerificationStatus=:emailVerificationStatus WHERE u.userId = :userId")
+	void updateUserEntityEmailVerificationStatus(
+			@Param("emailVerificationStatus") boolean emailVerificationStatus,
+			@Param("userId") String userId);
+	
 }
