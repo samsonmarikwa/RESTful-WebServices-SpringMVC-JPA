@@ -13,6 +13,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ import com.samsonmarikwa.appws.ui.model.response.UserRest;
 
 @RestController
 @RequestMapping("/users")
+//@CrossOrigin(origins={"http://localhost:8080", "http://localhost:8090"}) // allows requests to all endpoints in this controller from multiple specified origins
 public class UserController {
 
 	@Autowired
@@ -206,6 +208,9 @@ public class UserController {
 	}
 	
 	// http://localhost:8080/mobile-app-ws/users/email-verification?token=sdfdsf
+//	@CrossOrigin(origins="*") // allows requests from all origins
+//	@CrossOrigin(origins={"http://localhost:8080", "http://localhost:8090"}) // allows requests from multiple specified origins
+//	@CrossOrigin(origins="http://localhost:8080") // allows requests from http://localhost:8080
 	@GetMapping(path="/email-verification", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
 		
