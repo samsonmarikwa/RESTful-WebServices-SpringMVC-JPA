@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.samsonmarikwa.appws.io.entity.AddressEntity;
@@ -94,6 +93,43 @@ class UserRepositoryTest {
 		boolean emailVerificationStatus = true;
 		String userId = "abcd-efgh-ijkl";
 		userRepository.updateUserEmailVerificationStatus(emailVerificationStatus, userId);
+		
+		UserEntity userEntity = userRepository.findByUserId(userId);
+		
+		boolean storedEmailVerificationStatus = userEntity.getEmailVerificationStatus();
+		
+		assertTrue(storedEmailVerificationStatus == emailVerificationStatus);
+	}
+	
+	@Test
+	final void testFindUserEntityByUserId() {
+		String userId = "abcd-efgh-ijkl";
+		UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
+		
+		assertNotNull(userEntity);
+		assertEquals(userId, userEntity.getUserId());
+	}
+	
+	@Test
+	final void testGetUserEntityFullNameById() {
+		String userId = "abcd-efgh-ijkl";
+		List<Object[]> users = userRepository.getUserEntityFullNameById(userId);
+		assertNotNull(users);
+		assertTrue(users.size() == 1);
+		
+		Object[] user = users.get(0);
+		String firstname = (String) user[0];
+		String lastname = String.valueOf(user[1]);
+		
+		assertNotNull(firstname);
+		assertNotNull(lastname);
+	}
+	
+	@Test
+	final void testUpdateUserEntityEmailVerificationStatus() {
+		boolean emailVerificationStatus = true;
+		String userId = "abcd-efgh-ijkl";
+		userRepository.updateUserEntityEmailVerificationStatus(emailVerificationStatus, userId);
 		
 		UserEntity userEntity = userRepository.findByUserId(userId);
 		
