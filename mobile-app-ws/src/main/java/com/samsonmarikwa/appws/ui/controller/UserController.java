@@ -41,6 +41,7 @@ import com.samsonmarikwa.appws.ui.model.response.UserRest;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/users")
@@ -52,7 +53,9 @@ public class UserController {
 	
 	@Autowired
 	AddressService addressService;
-
+	
+	@ApiOperation(value="The Get User Details Web Service Endpoint",
+			notes="${userController.GetUser.ApiOperation.Notes}")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name="authorization", value="${userController.authorization.header.description}", paramType="header")
 	})
@@ -70,7 +73,9 @@ public class UserController {
 
 		return returnValue;
 	}
-
+	
+	@ApiOperation(value="${userController.CreateUser.ApiOperation.Value}",
+			notes="${userController.CreateUser.ApiOperation.Notes}")
 	@PostMapping(
 			consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
 			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
@@ -97,7 +102,9 @@ public class UserController {
 
 		return returnValue;
 	}
-
+	
+	@ApiOperation(value="${userController.UpdateUser.ApiOperation.Value}",
+			notes="${userController.UpdateUser.ApiOperation.Notes}")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name="authorization", value="${userController.authorization.header.description}", paramType="header")
 	})
