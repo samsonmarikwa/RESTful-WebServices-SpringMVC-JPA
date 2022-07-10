@@ -39,6 +39,9 @@ import com.samsonmarikwa.appws.ui.model.response.RequestOperationName;
 import com.samsonmarikwa.appws.ui.model.response.RequestOperationStatus;
 import com.samsonmarikwa.appws.ui.model.response.UserRest;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 @RestController
 @RequestMapping("/users")
 //@CrossOrigin(origins={"http://localhost:8080", "http://localhost:8090"}) // allows requests to all endpoints in this controller from multiple specified origins
@@ -50,6 +53,9 @@ public class UserController {
 	@Autowired
 	AddressService addressService;
 
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="authorization", value="${userController.authorization.header.description}", paramType="header")
+	})
 	// If client does not send Accept header value, then the first definition in the
 	// produces is taken as the return type.
 	// In this case, XML will be the default response type. To get JSON, the Accept
@@ -92,6 +98,9 @@ public class UserController {
 		return returnValue;
 	}
 
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="authorization", value="${userController.authorization.header.description}", paramType="header")
+	})
 	@PutMapping(path = "/{id}",
 			consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
 			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
@@ -109,7 +118,10 @@ public class UserController {
 		
 		return returnValue;
 	}
-
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="authorization", value="${userController.authorization.header.description}", paramType="header")
+	})
 	@DeleteMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public OperationStatusModel deleteUser(@PathVariable String id) {
 		OperationStatusModel returnValue = new OperationStatusModel();
@@ -121,6 +133,10 @@ public class UserController {
 		return returnValue;
 	}
 	
+	// Required to pass input through Swagger because by default this header input param is not available in swagger
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="authorization", value="${userController.authorization.header.description}", paramType="header")
+	})
 	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public List<UserRest> getUsers(@RequestParam(value="page", defaultValue="0") int page,
 			@RequestParam(value="limit", defaultValue="25") int limit) {
@@ -137,6 +153,9 @@ public class UserController {
 		return returnValue;
 	}
 	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="authorization", value="${userController.authorization.header.description}", paramType="header")
+	})
 	@GetMapping(path="/{userId}/addresses", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public CollectionModel<AddressRest> getUserAddresses(@PathVariable String userId) {
 		
@@ -165,6 +184,9 @@ public class UserController {
 			
 	}
 	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="authorization", value="${userController.authorization.header.description}", paramType="header")
+	})
 	@GetMapping(path="/{userId}/addresses/{addressId}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public EntityModel<AddressRest> getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
 //		public AddressRest getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
