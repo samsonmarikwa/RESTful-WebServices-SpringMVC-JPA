@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "userController.authorization.header.description",
+    "type": "java.lang.String",
+    "description": "A description for 'userController.authorization.header.description'"
+  },
+  {
+    "name": "userController.GetUser.ApiOperation.Notes",
+    "type": "java.lang.String",
+    "description": "A description for 'userController.GetUser.ApiOperation.Notes'"
+  }
+]}
